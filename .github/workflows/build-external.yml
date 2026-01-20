@@ -1,16 +1,28 @@
-name: External Build
-on: [workflow_dispatch] # This adds a manual "Run" button
+name: Build Oblivion Desktop
+on: [workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout someone else's code
+      - name: Checkout Oblivion Desktop
         uses: actions/checkout@v4
         with:
-          repository: USERNAME/REPO_NAME # REPLACE THIS with their details
-      - name: Run Build
-        run: |
-          # Replace these with the actual build commands they use
-          npm install
-          npm run build
+          repository: bepass-org/oblivion-desktop
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Stable version for Electron projects
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build for Linux
+        run: npm run package:linux 
+
+      - name: Upload Finished Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: oblivion-linux-build
+          path: release/build/ # This is where the docs say the files are saved
