@@ -1,15 +1,11 @@
-name: Build Oblivion Desktop
-on: [workflow_dispatch]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Oblivion Desktop
-        uses: actions/checkout@v4
+- name: Create Permanent Release
+        uses: softprops/action-gh-release@v2
         with:
-          repository: bepass-org/oblivion-desktop
-
+          tag_name: v${{ github.run_number }} # Gives each build a new version like v1, v2, etc.
+          name: Oblivion Desktop Build ${{ github.run_number }}
+          files: release/build/*.exe # This automatically attaches your Windows installer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Uses your built-in permission
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
