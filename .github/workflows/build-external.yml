@@ -1,0 +1,16 @@
+name: External Build
+on: [workflow_dispatch] # This adds a manual "Run" button
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout someone else's code
+        uses: actions/checkout@v4
+        with:
+          repository: USERNAME/REPO_NAME # REPLACE THIS with their details
+      - name: Run Build
+        run: |
+          # Replace these with the actual build commands they use
+          npm install
+          npm run build
