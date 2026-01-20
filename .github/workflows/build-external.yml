@@ -1,27 +1,28 @@
-- name: Create Permanent Release
-        uses: softprops/action-gh-release@v2
+name: Build Oblivion Windows
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          tag_name: v${{ github.run_number }} # Gives each build a new version like v1, v2, etc.
-          name: Oblivion Desktop Build ${{ github.run_number }}
-          files: release/build/*.exe # This automatically attaches your Windows installer
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Uses your built-in permission
-      - name: Setup Node.js
+          repository: bepass-org/oblivion-desktop
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Stable version for Electron projects
+          node-version: '18'
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install and Build
+        run: |
+          npm install
+          npm run package:windows
 
-      - name: Build for Linux
-        run: npm run package:linux 
-
-     - name: Create Permanent Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload Build
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: v${{ github.run_number }} # Gives each build a new version like v1, v2, etc.
-          name: Oblivion Desktop Build ${{ github.run_number }}
-          files: release/build/*.exe # This automatically attaches your Windows installer
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Uses your built-in permission
+          name: windows-app
+          path: release/build/*.exe
